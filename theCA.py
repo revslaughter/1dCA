@@ -94,7 +94,7 @@ def printTheMatrix(a):
 
 def makeTheThing(rule, n=1, initial=bin(random.getrandbits(150))[2:]):
     builder = initial
-    #output = []
+    output = []
     output.append(builder)
     for x in range(0,n):
 	builder = processTheNext(rule, builder)
