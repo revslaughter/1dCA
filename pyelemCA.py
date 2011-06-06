@@ -20,3 +20,10 @@ class elem:
 		builder = self.nextline(rule, builder)
 		self.matrix.append(builder)
     def __repr__(self):
+	for x in self.matrix:
+	    #This will have to change based on what we have in self.nextline
+	    print ((x.replace('0', '_')).replace('1', '#') + " " + str(int("0b"+x, 2)))
+    def nextline(rule, line):
+	binaryform=[]
+	if rule in range(0, 256):
+	    
