@@ -7,9 +7,10 @@ class elem:
 	self.rule = self.ruleform(rule)
 	self.seed = initial
 	self.state = isclosed
-	builder = initial
-	self.matrix = []
-	self.matrix.append(builder)
+	self.seed = initial
+	self.matrix = [self.seed]
+	self.gen = gen
+	#Dictionary to look up keys for given rule, see self.codon
 	self.whatdo = {
 	    7 : self.rule[0],
 	    6 : self.rule[1],
@@ -20,14 +21,7 @@ class elem:
 	    1 : self.rule[6],
 	    0 : self.rule[7]
 	}
-	if self.state:
-	    for x in range(0,gen):
-		builder = self.loopline(self.rule, builder)
-		self.matrix.append(builder)
-	else:
-	    for x in range(0,gen):
-		builder = self.nextline(self.rule, builder)
-		self.matrix.append(builder)
+	self.addgen(gen)
     def __repr__(self):
 	builder = ""
 	for x in range(0, len(self.matrix)):
@@ -38,6 +32,17 @@ class elem:
 		    builder += "_"
 	    builder += "\n"
 	return builder
+    def addgen(self, newgen):
+	builder = self.matrix[-1]
+	if self.state:
+	    for x in range(0,newgen):
+		builder = self.loopline(self.rule, builder)
+		self.matrix.append(builder)
+	else:
+	    for x in range(0,newgen):
+		builder = self.nextline(self.rule, builder)
+		self.matrix.append(builder)
+	self.gen += newgen
     def ruleform(self, rule):
 	binaryform=[]
 	if rule in range(0, 256):
@@ -51,19 +56,16 @@ class elem:
 		quotient = quotient/2
 	return binaryform
     def nextline(self, binrule, line):
-	newline = []
-	# I wanted to use lists of the form [1,1,1] but guess what, they're not
-	# to be used as dictionary keys. Mutable. I could use tuples, perhaps for
-	# clarity but this works too - just use the base-10 version of the codon
-	newline.append(line[0]) #The ends never change
+	newline = [line[0]] #The ends never change
 	for x in range(1, len(line)-1):
-	    newline.append(self.whatdo[((4*line[x-1])+(2*line[x])+(line[x+1]))])
+	    newline.append(self.codon(line[x-1], line[x], line[x+1]))
 	newline.append(line[-1])
 	return newline
     def loopline(self, binrule, line):
-	newline = []
-	newline.append(self.whatdo[((4*line[-1])+(2*line[0])+(line[1]))])
+	newline = [self.codon(line[-1], line[0], line[1])]
 	for x in range(1, len(line)-1):
-	    newline.append(self.whatdo[((4*line[x-1])+(2*line[x])+(line[x+1]))])
-	newline.append(self.whatdo[((4*line[-2])+(2*line[-1])+(line[0]))])
+	    newline.append(self.codon(line[x-1], line[x], line[x+1]))
+	newline.append(self.codon(line[-2], line[-1], line[0]))
 	return newline
+    # translates into a form that whatdo understands
+    def codon(self, a, b, c): return self.whatdo[((4*a)+(2*b)+(c))]
