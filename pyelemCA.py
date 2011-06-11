@@ -9,7 +9,7 @@ class elem:
 	self.state = isclosed
 	self.seed = initial
 	self.matrix = [self.seed]
-	self.gen = gen
+	self.gen = 0
 	#Dictionary to look up keys for given rule, see self.codon
 	self.whatdo = {
 	    7 : self.rule[0],
