@@ -63,12 +63,12 @@ class elem:
     def loopline(self, binrule, line):
 	newline = [self.whatdo[(line[-1], line[0], line[1])]]
 	for x in range(1, len(line)-1):
-	    newline.append(self.whatdo(line[x-1], line[x], line[x+1]))
+	    newline.append(self.whatdo[(line[x-1], line[x], line[x+1])])
 	newline.append(self.whatdo[(line[-2], line[-1], line[0])])
 	return newline
 
 if __name__=="__main__":
-    start=[0] * 52
-    start.extend([1,0])
-    big = elem(110, 50, start, 0)
+    start=([0]*50)+[1]+([0]*50)
+    choice = int(raw_input("Rule? "))
+    big = elem(choice, 50, start)
     print big
