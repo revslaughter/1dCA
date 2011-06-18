@@ -10,16 +10,15 @@ class elem:
 	self.seed = initial
 	self.matrix = [self.seed]
 	self.gen = 0
-	#Dictionary to look up keys for given rule, see self.codon
 	self.whatdo = {
-	    7 : self.rule[0],
-	    6 : self.rule[1],
-	    5 : self.rule[2],
-	    4 : self.rule[3],
-	    3 : self.rule[4],
-	    2 : self.rule[5],
-	    1 : self.rule[6],
-	    0 : self.rule[7]
+	    (1,1,1) : self.rule[0],
+	    (1,1,0) : self.rule[1],
+	    (1,0,1) : self.rule[2],
+	    (1,0,0) : self.rule[3],
+	    (0,1,1) : self.rule[4],
+	    (0,1,0) : self.rule[5],
+	    (0,0,1) : self.rule[6],
+	    (0,0,0) : self.rule[7]
 	}
 	self.addgen(gen)
     def __repr__(self):
@@ -58,14 +57,18 @@ class elem:
     def nextline(self, binrule, line):
 	newline = [line[0]] #The ends never change
 	for x in range(1, len(line)-1):
-	    newline.append(self.codon(line[x-1], line[x], line[x+1]))
+	    newline.append(self.whatdo[(line[x-1], line[x], line[x+1])])
 	newline.append(line[-1])
 	return newline
     def loopline(self, binrule, line):
-	newline = [self.codon(line[-1], line[0], line[1])]
+	newline = [self.whatdo[(line[-1], line[0], line[1])]]
 	for x in range(1, len(line)-1):
-	    newline.append(self.codon(line[x-1], line[x], line[x+1]))
-	newline.append(self.codon(line[-2], line[-1], line[0]))
+	    newline.append(self.whatdo(line[x-1], line[x], line[x+1]))
+	newline.append(self.whatdo[(line[-2], line[-1], line[0])])
 	return newline
-    # translates into a form that whatdo understands
-    def codon(self, a, b, c): return self.whatdo[((4*a)+(2*b)+(c))]
+
+if __name__=="__main__":
+    start=[0] * 52
+    start.extend([1,0])
+    big = elem(110, 50, start, 0)
+    print big
