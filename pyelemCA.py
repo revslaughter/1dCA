@@ -1,9 +1,22 @@
 # -*- coding: utf-8 -*-
 
-# class elem is a matrix of lists of 1s and 0s with methods in it?
-
 class elem:
+"""
+The elem class calculates generations of elementary cellular automata using
+matrix lists of int type 1s and 0s, stored in the elem.matrix object. 
+"""
     def __init__(self, rule, gen, initial, isclosed=1):
+	"""
+	Initializes to an initial matrix given the number of generations and
+	starting position, given as a list of 1s and 0s. 
+	
+	The default value for whether or not the system is closed (cylindrical) 
+	is true, which is how they are normally thought. 
+	
+	If isclosed is false or 0, then the ends of initial will be repeated.
+	
+	The dictionary self.whatdo tells us what to do given a position and the given rule.
+	"""
 	self.rule = self.ruleform(rule)
 	self.seed = initial
 	self.state = isclosed
@@ -22,6 +35,9 @@ class elem:
 	}
 	self.addgen(gen)
     def __repr__(self):
+	"""
+	returns a neat pattern of _ and #
+	"""
 	builder = ""
 	for x in range(0, len(self.matrix)):
 	    for y in self.matrix[x]:
@@ -32,6 +48,10 @@ class elem:
 	    builder += "\n"
 	return builder
     def addgen(self, newgen):
+	"""
+	addgen takes the last position of self.matrix, and calculates the
+	next iterations. With this, elem is extensible.
+	"""
 	builder = self.matrix[-1]
 	if self.state:
 	    for x in range(0,newgen):
@@ -43,6 +63,11 @@ class elem:
 		self.matrix.append(builder)
 	self.gen += newgen
     def ruleform(self, rule):
+	"""
+	Takes an int rule and returns a binary representation,
+	in the form of a list. I know that bin() does this, but
+	bin() returns a string, which is not useful to this project.
+	"""
 	binaryform=[]
 	if rule in range(0, 256):
 	    quotient = 128
@@ -55,12 +80,21 @@ class elem:
 		quotient = quotient/2
 	return binaryform
     def nextline(self, binrule, line):
-	newline = [line[0]] #The ends never change
+	"""
+	nextline is used by addgen and returns the next generation.
+	nextline also assumes the 'open' framework that doesn't wrap around.
+	"""
+	newline = [line[0]] 
 	for x in range(1, len(line)-1):
 	    newline.append(self.whatdo[(line[x-1], line[x], line[x+1])])
 	newline.append(line[-1])
 	return newline
     def loopline(self, binrule, line):
+	"""
+	loopline gives the next generation assuming isclosed=true.
+	I think that nextline and loopline should be merged into one method
+	that takes into account isclosed.
+	"""
 	newline = [self.whatdo[(line[-1], line[0], line[1])]]
 	for x in range(1, len(line)-1):
 	    newline.append(self.whatdo[(line[x-1], line[x], line[x+1])])
@@ -68,6 +102,8 @@ class elem:
 	return newline
 
 if __name__=="__main__":
+    #This just gives us a test example to make sure that everything
+    #is running smoothly. Is everything running smoothly?
     start=([0]*50)+[1]+([0]*50)
     choice = int(raw_input("Rule? "))
     big = elem(choice, 50, start)
