@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 class elem:
-"""
-The elem class calculates generations of elementary cellular automata using
-matrix lists of int type 1s and 0s, stored in the elem.matrix object. 
-"""
+    """
+    The elem class calculates generations of elementary cellular automata using
+    matrix lists of int type 1s and 0s, stored in the elem.matrix object. 
+    """
     def __init__(self, rule, gen, initial, isclosed=1):
 	"""
 	Initializes to an initial matrix given the number of generations and
@@ -37,6 +37,8 @@ matrix lists of int type 1s and 0s, stored in the elem.matrix object.
     def __repr__(self):
 	"""
 	returns a neat pattern of _ and #
+	Hopefully we can make a subcless that will represent elem
+	as some nice GUI or raster image. Wouldn't that be nice?
 	"""
 	builder = ""
 	for x in range(0, len(self.matrix)):
@@ -53,14 +55,9 @@ matrix lists of int type 1s and 0s, stored in the elem.matrix object.
 	next iterations. With this, elem is extensible.
 	"""
 	builder = self.matrix[-1]
-	if self.state:
-	    for x in range(0,newgen):
-		builder = self.loopline(self.rule, builder)
-		self.matrix.append(builder)
-	else:
-	    for x in range(0,newgen):
-		builder = self.nextline(self.rule, builder)
-		self.matrix.append(builder)
+	for x in range(0,newgen):
+	    builder = self.nextline(self.rule, builder)
+	    self.matrix.append(builder)
 	self.gen += newgen
     def ruleform(self, rule):
 	"""
@@ -82,24 +79,33 @@ matrix lists of int type 1s and 0s, stored in the elem.matrix object.
     def nextline(self, binrule, line):
 	"""
 	nextline is used by addgen and returns the next generation.
-	nextline also assumes the 'open' framework that doesn't wrap around.
 	"""
-	newline = [line[0]] 
-	for x in range(1, len(line)-1):
-	    newline.append(self.whatdo[(line[x-1], line[x], line[x+1])])
-	newline.append(line[-1])
+	newline = []
+	boink = lambda x: newline.append(self.whatdo[(line[x-1], line[x], line[x+1])])
+	
+	if self.state:
+	    newline.append(self.whatdo[(line[-1], line[0], line[1])])
+	    for x in range(1, len(line)-1):
+		boink(x)
+	    newline.append(self.whatdo[(line[-2], line[-1], line[0])])
+	else:
+	    newline.append(line[0])
+	    for x in range(1, len(line)-1):
+		boink(x)
+	    newline.append(line[-1])
+	    
 	return newline
-    def loopline(self, binrule, line):
-	"""
-	loopline gives the next generation assuming isclosed=true.
-	I think that nextline and loopline should be merged into one method
-	that takes into account isclosed.
-	"""
-	newline = [self.whatdo[(line[-1], line[0], line[1])]]
-	for x in range(1, len(line)-1):
-	    newline.append(self.whatdo[(line[x-1], line[x], line[x+1])])
-	newline.append(self.whatdo[(line[-2], line[-1], line[0])])
-	return newline
+    #def loopline(self, binrule, line):
+	#"""
+	#loopline gives the next generation assuming isclosed=true.
+	#I think that nextline and loopline should be merged into one method
+	#that takes into account isclosed.
+	#"""
+	#newline = [self.whatdo[(line[-1], line[0], line[1])]]
+	#for x in range(1, len(line)-1):
+	    #newline.append(self.whatdo[(line[x-1], line[x], line[x+1])])
+	#newline.append(self.whatdo[(line[-2], line[-1], line[0])])
+	#return newline
 
 if __name__=="__main__":
     #This just gives us a test example to make sure that everything
