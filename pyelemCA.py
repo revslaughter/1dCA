@@ -5,7 +5,7 @@ class elem:
     The elem class calculates generations of elementary cellular automata using
     matrix lists of int type 1s and 0s, stored in the elem.matrix object. 
     """
-    def __init__(self, rule, gen, initial, isclosed=1):
+    def __init__(self, rule, gen, initial=(([0]*50)+[1]+([0]*50)), isclosed=1):
 	"""
 	Initializes to an initial matrix given the number of generations and
 	starting position, given as a list of 1s and 0s. 
@@ -34,12 +34,17 @@ class elem:
 	    (0,0,0) : self.rule[7]
 	}
 	self.addgen(gen)
-    def __repr__(self):
+    def __str__(self):
 	"""
 	returns a neat pattern of _ and #
 	Hopefully we can make a subcless that will represent elem
 	as some nice GUI or raster image. Wouldn't that be nice?
+	
+	I changed this from the __repr__ special method because it's silly
+	to have this whole huge output when Python talks about this object.
 	"""
+	
+	#rewrite below using "\n".join
 	builder = ""
 	for x in range(0, len(self.matrix)):
 	    for y in self.matrix[x]:
@@ -96,11 +101,11 @@ class elem:
 	    
 	return newline
     def clear(self): self.matrix.clear()
+    def __getitem__(self, x): return self.matrix[x]
 
 if __name__=="__main__":
     #This just gives us a test example to make sure that everything
     #is running smoothly. Is everything running smoothly?
-    start=([0]*50)+[1]+([0]*50)
     choice = int(raw_input("Rule? "))
-    big = elem(choice, 50, start)
+    big = elem(choice, 50)
     print big
