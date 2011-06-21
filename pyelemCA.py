@@ -95,17 +95,7 @@ class elem:
 	    newline.append(line[-1])
 	    
 	return newline
-    #def loopline(self, binrule, line):
-	#"""
-	#loopline gives the next generation assuming isclosed=true.
-	#I think that nextline and loopline should be merged into one method
-	#that takes into account isclosed.
-	#"""
-	#newline = [self.whatdo[(line[-1], line[0], line[1])]]
-	#for x in range(1, len(line)-1):
-	    #newline.append(self.whatdo[(line[x-1], line[x], line[x+1])])
-	#newline.append(self.whatdo[(line[-2], line[-1], line[0])])
-	#return newline
+    def clear(self): self.matrix.clear()
 
 if __name__=="__main__":
     #This just gives us a test example to make sure that everything
