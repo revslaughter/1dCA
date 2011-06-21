@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 
-class elem:
+class Elem:
     """
-    The elem class calculates generations of elementary cellular automata using
-    matrix lists of int type 1s and 0s, stored in the elem.matrix object. 
+    The Elem class calculates generations of Elementary cellular automata using
+    matrix lists of int type 1s and 0s, stored in the Elem.matrix object. 
     """
     def __init__(self, rule, gen, initial=(([0]*50)+[1]+([0]*50)), isclosed=1):
 	"""
 	Initializes to an initial matrix given the number of generations and
 	starting position, given as a list of 1s and 0s. 
+	
+	The initial starting list default value is a 1 surrounded by 100 zeros.
 	
 	The default value for whether or not the system is closed (cylindrical) 
 	is true, which is how they are normally thought. 
@@ -37,7 +39,7 @@ class elem:
     def __str__(self):
 	"""
 	returns a neat pattern of _ and #
-	Hopefully we can make a subcless that will represent elem
+	Hopefully we can make a subcless that will represent Elem
 	as some nice GUI or raster image. Wouldn't that be nice?
 	
 	I changed this from the __repr__ special method because it's silly
@@ -57,7 +59,7 @@ class elem:
     def addgen(self, newgen):
 	"""
 	addgen takes the last position of self.matrix, and calculates the
-	next iterations. With this, elem is extensible.
+	next iterations. With this, Elem is extensible.
 	"""
 	builder = self.matrix[-1]
 	for x in range(0,newgen):
@@ -102,10 +104,11 @@ class elem:
 	return newline
     def clear(self): self.matrix.clear()
     def __getitem__(self, x): return self.matrix[x]
+    def __len__(self): return len(self.matrix)
 
 if __name__=="__main__":
     #This just gives us a test example to make sure that everything
     #is running smoothly. Is everything running smoothly?
     choice = int(raw_input("Rule? "))
-    big = elem(choice, 50)
+    big = Elem(choice, 50)
     print big
