@@ -39,7 +39,7 @@ class Elem:
     def __str__(self):
 	"""
 	returns a neat pattern of _ and #
-	Hopefully we can make a subcless that will represent Elem
+	Hopefully we can make a subclass that will represent Elem
 	as some nice GUI or raster image. Wouldn't that be nice?
 	
 	I changed this from the __repr__ special method because it's silly
