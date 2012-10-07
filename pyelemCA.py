@@ -3,20 +3,20 @@
 class Elem:
     """
     The Elem class calculates generations of Elementary cellular automata using
-    matrix lists of int type 1s and 0s, stored in the Elem.matrix object. 
+    matrix lists of int type 1s and 0s, stored in the Elem.matrix object.
     """
     def __init__(self, rule, gen, initial=(([0]*50)+[1]+([0]*50)), isclosed=1):
 	"""
 	Initializes to an initial matrix given the number of generations and
-	starting position, given as a list of 1s and 0s. 
-	
+	starting position, given as a list of 1s and 0s.
+
 	The initial starting list default value is a 1 surrounded by 100 zeros.
-	
-	The default value for whether or not the system is closed (cylindrical) 
-	is true, which is how they are normally thought. 
-	
+
+	The default value for whether or not the system is closed (cylindrical)
+	is true, which is how they are normally thought.
+
 	If isclosed is false or 0, then the ends of initial will be repeated.
-	
+
 	The dictionary self.whatdo tells us what to do given a position and the given rule.
 	"""
 	self.rule = self.ruleform(rule)
@@ -41,21 +41,25 @@ class Elem:
 	returns a neat pattern of _ and #
 	Hopefully we can make a subclass that will represent Elem
 	as some nice GUI or raster image. Wouldn't that be nice?
-	
+
 	I changed this from the __repr__ special method because it's silly
 	to have this whole huge output when Python talks about this object.
 	"""
-	
+
 	#rewrite below using "\n".join
-	builder = ""
-	for x in range(0, len(self.matrix)):
-	    for y in self.matrix[x]:
-		if y:
-		    builder += "#"
-		else:
-		    builder += "_"
-	    builder += "\n"
-	return builder
+	#builder = [x for x in range(0, len(self.matrix))]
+
+        builder = ""
+
+    	for x in range(0, len(self.matrix)):
+    	    for y in self.matrix[x]:
+    		    if y:
+    		        builder += "#"
+    		    else:
+    		        builder += "_"
+    	    builder += "\n"
+    	return builder
+
     def addgen(self, newgen):
 	"""
 	addgen takes the last position of self.matrix, and calculates the
@@ -89,7 +93,7 @@ class Elem:
 	"""
 	newline = []
 	boink = lambda x: newline.append(self.whatdo[(line[x-1], line[x], line[x+1])])
-	
+
 	if self.state:
 	    newline.append(self.whatdo[(line[-1], line[0], line[1])])
 	    for x in range(1, len(line)-1):
@@ -100,7 +104,7 @@ class Elem:
 	    for x in range(1, len(line)-1):
 		boink(x)
 	    newline.append(line[-1])
-	    
+
 	return newline
     def clear(self): self.matrix.clear()
     def __getitem__(self, x): return self.matrix[x]
